@@ -1,0 +1,303 @@
+<html>
+<head>
+<title>DummyPortfolio.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #629755; font-style: italic;}
+.s3 { color: #629755; font-weight: bold; font-style: italic;}
+.s4 { color: #6897bb;}
+.s5 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+DummyPortfolio.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.education.mosbach.utils</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">java.util.Random</span><span class="s0">;</span>
+
+<span class="s2">/**</span>
+ <span class="s2">* </span><span class="s3">@author </span><span class="s2">Joel Heidl</span>
+ <span class="s2">*/</span>
+    <span class="s0">public class </span><span class="s1">DummyPortfolio {</span>
+
+        <span class="s0">static class </span><span class="s1">Marktplatz </span><span class="s0">implements </span><span class="s1">Runnable {</span>
+
+            <span class="s0">private static int</span><span class="s1">[] rohstoffLager = </span><span class="s0">new int</span><span class="s1">[</span><span class="s4">5</span><span class="s1">]</span><span class="s0">;</span>
+            <span class="s0">private static int</span><span class="s1">[] endproduktLager = </span><span class="s0">new int</span><span class="s1">[</span><span class="s4">6</span><span class="s1">]</span><span class="s0">;</span>
+            <span class="s0">private static int</span><span class="s1">[] gekaufteEndProdukte = </span><span class="s0">new int</span><span class="s1">[</span><span class="s4">6</span><span class="s1">]</span><span class="s0">;</span>
+            <span class="s0">private static int</span><span class="s1">[] gekaufteRohstoffeProZeiteinheit = </span><span class="s0">new int</span><span class="s1">[</span><span class="s4">5</span><span class="s1">]</span><span class="s0">;</span>
+
+            <span class="s0">private static </span><span class="s1">Marktplatz marktplatz = </span><span class="s0">new </span><span class="s1">Marktplatz()</span><span class="s0">;</span>
+
+            <span class="s0">private </span><span class="s1">Marktplatz() {}</span>
+
+            <span class="s0">public static </span><span class="s1">Marktplatz getMarktplatz() {</span>
+                <span class="s0">return </span><span class="s1">marktplatz</span><span class="s0">;</span>
+            <span class="s1">}</span>
+
+            <span class="s2">/**</span>
+             <span class="s2">* </span><span class="s3">@param </span><span class="s2">A wird vom Lieferanten geliefert und in Rohstofflager eingelagert</span>
+             <span class="s2">*/</span>
+            <span class="s0">static void </span><span class="s1">einlagernRohL(</span><span class="s0">int</span><span class="s1">[] A) {</span>
+                <span class="s0">synchronized </span><span class="s1">(rohstoffLager) {</span>
+                    <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s4">0</span><span class="s0">; </span><span class="s1">i &lt; rohstoffLager.length</span><span class="s0">; </span><span class="s1">i++) {</span>
+                        <span class="s1">rohstoffLager[i] += A[i]</span><span class="s0">;</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+
+            <span class="s2">/**</span>
+             <span class="s2">* </span><span class="s3">@param </span><span class="s2">endProdukt wird vom Lieferanten produziert und in Endproduktlager eingelagert</span>
+             <span class="s2">*/</span>
+            <span class="s0">static void </span><span class="s1">einlagernEndL(</span><span class="s0">int </span><span class="s1">endProdukt) {</span>
+                <span class="s0">synchronized</span><span class="s1">(endproduktLager){</span>
+                    <span class="s1">endproduktLager[endProdukt] = endproduktLager[endProdukt] + </span><span class="s4">1</span><span class="s0">;</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+
+            <span class="s2">/**</span>
+             <span class="s2">* wird vom Konsumenten aufgerufen und entnimmt Endprodukte aus dem Endproduktlager</span>
+             <span class="s2">*/</span>
+            <span class="s0">static void </span><span class="s1">kaufen() {</span>
+                <span class="s1">Random random = </span><span class="s0">new </span><span class="s1">Random()</span><span class="s0">;</span>
+                <span class="s0">int </span><span class="s1">käufe = random.nextInt(</span><span class="s4">2</span><span class="s1">) + </span><span class="s4">3</span><span class="s0">;</span>
+                <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s4">0</span><span class="s0">; </span><span class="s1">i &lt; käufe</span><span class="s0">; </span><span class="s1">i++) {</span>
+                    <span class="s0">int </span><span class="s1">endProdukt = random.nextInt(</span><span class="s4">6</span><span class="s1">)</span><span class="s0">;</span>
+
+                    <span class="s0">synchronized </span><span class="s1">(endproduktLager) {</span>
+                        <span class="s0">if </span><span class="s1">(endproduktLager[endProdukt] &gt; </span><span class="s4">0</span><span class="s1">){</span>
+                            <span class="s1">endproduktLager[endProdukt] = endproduktLager[endProdukt] - </span><span class="s4">1</span><span class="s0">;</span>
+                            <span class="s1">gekaufteEndProdukte[endProdukt] = gekaufteEndProdukte[endProdukt] + </span><span class="s4">1</span><span class="s0">;</span>
+                        <span class="s1">}</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+
+            <span class="s0">void </span><span class="s1">ausgebeneGekaufteRohstoffeProZeiteinheit () {</span>
+                <span class="s1">System.out.println()</span><span class="s0">;</span>
+                <span class="s1">System.out.println(</span><span class="s5">&quot;Gekaufte Rohstoffe pro Zeiteinheit: &quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s4">0</span><span class="s0">; </span><span class="s1">i &lt; gekaufteRohstoffeProZeiteinheit.length</span><span class="s0">; </span><span class="s1">i++) {</span>
+                    <span class="s1">System.out.println(</span><span class="s5">&quot;Rohstoff &quot; </span><span class="s1">+ i + </span><span class="s5">&quot;: &quot; </span><span class="s1">+ gekaufteRohstoffeProZeiteinheit[i] + </span><span class="s5">&quot; mal gekauft&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">}</span>
+                <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s4">0</span><span class="s0">; </span><span class="s1">i &lt; gekaufteRohstoffeProZeiteinheit.length</span><span class="s0">; </span><span class="s1">i++) {</span>
+
+                    <span class="s1">gekaufteRohstoffeProZeiteinheit[i] = </span><span class="s4">0</span><span class="s0">;</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+
+            <span class="s0">void </span><span class="s1">ausgebenGekaufteEndProdukte(){</span>
+                <span class="s1">System.out.println()</span><span class="s0">;</span>
+                <span class="s1">System.out.println(</span><span class="s5">&quot;Insgesamt gekaufte Endprodukte: &quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s4">0</span><span class="s0">; </span><span class="s1">i &lt; gekaufteEndProdukte.length</span><span class="s0">; </span><span class="s1">i++) {</span>
+                    <span class="s1">System.out.println(</span><span class="s5">&quot;Endprodukt &quot; </span><span class="s1">+ i + </span><span class="s5">&quot;: &quot; </span><span class="s1">+ gekaufteEndProdukte[i] + </span><span class="s5">&quot; mal gekauft&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+
+            <span class="s2">/**</span>
+             <span class="s2">* wird vom Produzent aufgerufen, entnimmt Rohstoffe aus dem Rohstofflager zur Produktion</span>
+             <span class="s2">*</span>
+             <span class="s2">* </span><span class="s3">@param </span><span class="s2">rohstoff ist die Indexnummer im Rohstofflager</span>
+             <span class="s2">* </span><span class="s3">@param </span><span class="s2">verbrauch ist der Verbrauch des angesprochenen Rohstoffes</span>
+             <span class="s2">*/</span>
+            <span class="s0">static void </span><span class="s1">auslagernRohL(</span><span class="s0">int </span><span class="s1">rohstoff</span><span class="s0">, int </span><span class="s1">verbrauch){</span>
+                <span class="s0">synchronized</span><span class="s1">(rohstoffLager){</span>
+
+                    <span class="s1">gekaufteRohstoffeProZeiteinheit[rohstoff] += verbrauch</span><span class="s0">;</span>
+                    <span class="s1">rohstoffLager[rohstoff] -= verbrauch</span><span class="s0">;</span>
+
+                <span class="s1">}</span>
+
+            <span class="s1">}</span>
+
+            <span class="s0">void </span><span class="s1">ausgebenrohstoffL() {</span>
+                <span class="s1">System.out.println(</span><span class="s5">&quot;Rohstoffe auf Lager: &quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s0">for</span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s4">0</span><span class="s0">; </span><span class="s1">i&lt; rohstoffLager.length</span><span class="s0">; </span><span class="s1">i++) {</span>
+                    <span class="s1">System.out.println(</span><span class="s5">&quot;Rohstoff &quot; </span><span class="s1">+ i + </span><span class="s5">&quot; hat &quot; </span><span class="s1">+ rohstoffLager[i] + </span><span class="s5">&quot; Elemente&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+
+            <span class="s0">void </span><span class="s1">ausgebenEndL(){</span>
+                <span class="s1">System.out.println()</span><span class="s0">;</span>
+                <span class="s1">System.out.println(</span><span class="s5">&quot;Endprodukte auf Lager: &quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s4">0</span><span class="s0">; </span><span class="s1">i &lt; endproduktLager.length</span><span class="s0">; </span><span class="s1">i++) {</span>
+                    <span class="s1">System.out.println(</span><span class="s5">&quot;Endprodukt &quot; </span><span class="s1">+ i + </span><span class="s5">&quot; hat &quot; </span><span class="s1">+ endproduktLager[i] + </span><span class="s5">&quot; Elemente&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">run() {</span>
+                <span class="s1">ausgebenrohstoffL()</span><span class="s0">;</span>
+                <span class="s1">ausgebeneGekaufteRohstoffeProZeiteinheit()</span><span class="s0">;</span>
+                <span class="s1">ausgebenEndL()</span><span class="s0">;</span>
+                <span class="s1">ausgebenGekaufteEndProdukte()</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+
+    <span class="s0">static class </span><span class="s1">RohstoffLieferant </span><span class="s0">implements </span><span class="s1">Runnable{</span>
+
+            <span class="s2">/**</span>
+             <span class="s2">* erzeugt ein Rohstoffarray mit 5 Rohstoffen</span>
+             <span class="s2">*</span>
+             <span class="s2">* entweder werden zwischen 5 und 10 Mengeneinheiten pro Rohstoff dann eingelagert oder nichts</span>
+             <span class="s2">*/</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">run() {</span>
+
+                <span class="s0">int</span><span class="s1">[] rohstoffe = </span><span class="s0">new int</span><span class="s1">[</span><span class="s4">5</span><span class="s1">]</span><span class="s0">;</span>
+                <span class="s1">Random random = </span><span class="s0">new </span><span class="s1">Random()</span><span class="s0">;</span>
+                <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s4">0</span><span class="s0">; </span><span class="s1">i &lt; rohstoffe.length</span><span class="s0">; </span><span class="s1">i++) {</span>
+                    <span class="s1">rohstoffe[i] = random.nextInt(</span><span class="s4">10</span><span class="s1">)</span><span class="s0">;</span>
+                    <span class="s0">if</span><span class="s1">(rohstoffe[i] &lt; </span><span class="s4">5</span><span class="s1">){</span>
+                        <span class="s1">rohstoffe[i] = </span><span class="s4">0</span><span class="s0">;</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+                <span class="s1">Marktplatz.einlagernRohL(rohstoffe)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+
+        <span class="s0">static class </span><span class="s1">Produzent </span><span class="s0">implements </span><span class="s1">Runnable{</span>
+
+            <span class="s0">int </span><span class="s1">ID</span><span class="s0">;</span>
+
+            <span class="s0">public </span><span class="s1">Produzent(</span><span class="s0">int </span><span class="s1">ID){</span>
+
+                <span class="s0">this</span><span class="s1">.ID = ID</span><span class="s0">;</span>
+            <span class="s1">}</span>
+
+            <span class="s2">/**</span>
+             <span class="s2">* jeder Produzent hat eigene ID</span>
+             <span class="s2">* --&gt; ID bestimmt Produktionsweg durch switch-case</span>
+             <span class="s2">*</span>
+             <span class="s2">* wenn genug Rohstoffe für einen Produktionsweg vorhanden sind, werden die Rohstoffe ausgelagert</span>
+             <span class="s2">* und die Endprodukte ins Endproduktlager eingelagert</span>
+             <span class="s2">*</span>
+             <span class="s2">* der Produzent kann viermal hintereinander seine beiden Produktionen durchlaufen</span>
+             <span class="s2">* --&gt; somit kann ein Produzent pro Zeiteinheit max. 8 Produkte erstellen</span>
+             <span class="s2">*/</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">run() {</span>
+                <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s4">0</span><span class="s0">; </span><span class="s1">i &lt; </span><span class="s4">5</span><span class="s0">; </span><span class="s1">i++) {</span>
+                    <span class="s0">switch </span><span class="s1">(ID) {</span>
+
+                        <span class="s0">case </span><span class="s4">1</span><span class="s1">:</span>
+                            <span class="s0">if </span><span class="s1">(Marktplatz.rohstoffLager[</span><span class="s4">0</span><span class="s1">] &gt;= </span><span class="s4">3 </span><span class="s1">&amp;&amp; Marktplatz.rohstoffLager[</span><span class="s4">1</span><span class="s1">] &gt;= </span><span class="s4">1 </span><span class="s1">&amp;&amp; Marktplatz.rohstoffLager[</span><span class="s4">2</span><span class="s1">] &gt;= </span><span class="s4">1</span><span class="s1">) {</span>
+                                <span class="s1">Marktplatz.einlagernEndL(</span><span class="s4">0</span><span class="s1">)</span><span class="s0">;</span>
+                                <span class="s1">Marktplatz.auslagernRohL(</span><span class="s4">0</span><span class="s0">, </span><span class="s4">3</span><span class="s1">)</span><span class="s0">;</span>
+                                <span class="s1">Marktplatz.auslagernRohL(</span><span class="s4">1</span><span class="s0">, </span><span class="s4">1</span><span class="s1">)</span><span class="s0">;</span>
+                                <span class="s1">Marktplatz.auslagernRohL(</span><span class="s4">2</span><span class="s0">, </span><span class="s4">1</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">}</span>
+                            <span class="s0">if </span><span class="s1">(Marktplatz.rohstoffLager[</span><span class="s4">2</span><span class="s1">] &gt;= </span><span class="s4">2 </span><span class="s1">&amp;&amp; Marktplatz.rohstoffLager[</span><span class="s4">3</span><span class="s1">] &gt;= </span><span class="s4">2 </span><span class="s1">&amp;&amp; Marktplatz.rohstoffLager[</span><span class="s4">4</span><span class="s1">] &gt;= </span><span class="s4">2</span><span class="s1">) {</span>
+                                <span class="s1">Marktplatz.einlagernEndL(</span><span class="s4">1</span><span class="s1">)</span><span class="s0">;</span>
+                                <span class="s1">Marktplatz.auslagernRohL(</span><span class="s4">2</span><span class="s0">, </span><span class="s4">2</span><span class="s1">)</span><span class="s0">;</span>
+                                <span class="s1">Marktplatz.auslagernRohL(</span><span class="s4">3</span><span class="s0">, </span><span class="s4">2</span><span class="s1">)</span><span class="s0">;</span>
+                                <span class="s1">Marktplatz.auslagernRohL(</span><span class="s4">4</span><span class="s0">, </span><span class="s4">2</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">}</span>
+                            <span class="s0">break;</span>
+
+                        <span class="s0">case </span><span class="s4">2</span><span class="s1">:</span>
+                            <span class="s0">if </span><span class="s1">(Marktplatz.rohstoffLager[</span><span class="s4">0</span><span class="s1">] &gt;= </span><span class="s4">4 </span><span class="s1">&amp;&amp; Marktplatz.rohstoffLager[</span><span class="s4">2</span><span class="s1">] &gt;= </span><span class="s4">2 </span><span class="s1">&amp;&amp; Marktplatz.rohstoffLager[</span><span class="s4">4</span><span class="s1">] &gt;= </span><span class="s4">2</span><span class="s1">) {</span>
+                                <span class="s1">Marktplatz.einlagernEndL(</span><span class="s4">2</span><span class="s1">)</span><span class="s0">;</span>
+                                <span class="s1">Marktplatz.auslagernRohL(</span><span class="s4">0</span><span class="s0">, </span><span class="s4">4</span><span class="s1">)</span><span class="s0">;</span>
+                                <span class="s1">Marktplatz.auslagernRohL(</span><span class="s4">2</span><span class="s0">, </span><span class="s4">2</span><span class="s1">)</span><span class="s0">;</span>
+                                <span class="s1">Marktplatz.auslagernRohL(</span><span class="s4">4</span><span class="s0">, </span><span class="s4">2</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">}</span>
+                            <span class="s0">if </span><span class="s1">(Marktplatz.rohstoffLager[</span><span class="s4">1</span><span class="s1">] &gt;= </span><span class="s4">1 </span><span class="s1">&amp;&amp; Marktplatz.rohstoffLager[</span><span class="s4">2</span><span class="s1">] &gt;= </span><span class="s4">1 </span><span class="s1">&amp;&amp; Marktplatz.rohstoffLager[</span><span class="s4">3</span><span class="s1">] &gt;= </span><span class="s4">1</span><span class="s1">) {</span>
+                                <span class="s1">Marktplatz.einlagernEndL(</span><span class="s4">3</span><span class="s1">)</span><span class="s0">;</span>
+                                <span class="s1">Marktplatz.auslagernRohL(</span><span class="s4">1</span><span class="s0">, </span><span class="s4">1</span><span class="s1">)</span><span class="s0">;</span>
+                                <span class="s1">Marktplatz.auslagernRohL(</span><span class="s4">2</span><span class="s0">, </span><span class="s4">1</span><span class="s1">)</span><span class="s0">;</span>
+                                <span class="s1">Marktplatz.auslagernRohL(</span><span class="s4">3</span><span class="s0">, </span><span class="s4">1</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">}</span>
+                            <span class="s0">break;</span>
+
+                        <span class="s0">case </span><span class="s4">3</span><span class="s1">:</span>
+                            <span class="s0">if </span><span class="s1">(Marktplatz.rohstoffLager[</span><span class="s4">1</span><span class="s1">] &gt;= </span><span class="s4">1 </span><span class="s1">&amp;&amp; Marktplatz.rohstoffLager[</span><span class="s4">3</span><span class="s1">] &gt;= </span><span class="s4">2</span><span class="s1">) {</span>
+                                <span class="s1">Marktplatz.einlagernEndL(</span><span class="s4">4</span><span class="s1">)</span><span class="s0">;</span>
+                                <span class="s1">Marktplatz.auslagernRohL(</span><span class="s4">1</span><span class="s0">, </span><span class="s4">1</span><span class="s1">)</span><span class="s0">;</span>
+                                <span class="s1">Marktplatz.auslagernRohL(</span><span class="s4">3</span><span class="s0">, </span><span class="s4">2</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">}</span>
+                            <span class="s0">if </span><span class="s1">(Marktplatz.rohstoffLager[</span><span class="s4">0</span><span class="s1">] &gt;= </span><span class="s4">1 </span><span class="s1">&amp;&amp; Marktplatz.rohstoffLager[</span><span class="s4">4</span><span class="s1">] &gt;= </span><span class="s4">2</span><span class="s1">) {</span>
+                                <span class="s1">Marktplatz.einlagernEndL(</span><span class="s4">5</span><span class="s1">)</span><span class="s0">;</span>
+                                <span class="s1">Marktplatz.auslagernRohL(</span><span class="s4">0</span><span class="s0">, </span><span class="s4">1</span><span class="s1">)</span><span class="s0">;</span>
+                                <span class="s1">Marktplatz.auslagernRohL(</span><span class="s4">4</span><span class="s0">, </span><span class="s4">2</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">}</span>
+
+                            <span class="s0">break;</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+
+        <span class="s0">static class </span><span class="s1">Konsument </span><span class="s0">implements </span><span class="s1">Runnable{</span>
+
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">run() {</span>
+                <span class="s1">Marktplatz.kaufen()</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+
+        <span class="s0">public static void </span><span class="s1">main(String[] args) </span><span class="s0">throws </span><span class="s1">InterruptedException {</span>
+
+            <span class="s1">Marktplatz marktplatz = Marktplatz.getMarktplatz()</span><span class="s0">;</span>
+
+            <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s4">1</span><span class="s0">; </span><span class="s1">i &lt;=</span><span class="s4">20</span><span class="s0">;</span><span class="s1">i++) {</span>
+
+                <span class="s1">Thread rohstoffLieferant1 = </span><span class="s0">new </span><span class="s1">Thread(</span><span class="s0">new </span><span class="s1">RohstoffLieferant())</span><span class="s0">;</span>
+                <span class="s1">Thread rohstoffLieferant2 = </span><span class="s0">new </span><span class="s1">Thread(</span><span class="s0">new </span><span class="s1">RohstoffLieferant())</span><span class="s0">;</span>
+                <span class="s1">Thread rohstoffLieferant3 = </span><span class="s0">new </span><span class="s1">Thread(</span><span class="s0">new </span><span class="s1">RohstoffLieferant())</span><span class="s0">;</span>
+
+                <span class="s1">Thread produzent1 = </span><span class="s0">new </span><span class="s1">Thread(</span><span class="s0">new </span><span class="s1">Produzent(</span><span class="s4">1</span><span class="s1">))</span><span class="s0">;</span>
+                <span class="s1">Thread produzent2 = </span><span class="s0">new </span><span class="s1">Thread(</span><span class="s0">new </span><span class="s1">Produzent(</span><span class="s4">2</span><span class="s1">))</span><span class="s0">;</span>
+                <span class="s1">Thread produzent3 = </span><span class="s0">new </span><span class="s1">Thread(</span><span class="s0">new </span><span class="s1">Produzent(</span><span class="s4">3</span><span class="s1">))</span><span class="s0">;</span>
+
+                <span class="s1">Thread konsument1 = </span><span class="s0">new </span><span class="s1">Thread(</span><span class="s0">new </span><span class="s1">Konsument())</span><span class="s0">;</span>
+                <span class="s1">Thread konsument2 = </span><span class="s0">new </span><span class="s1">Thread(</span><span class="s0">new </span><span class="s1">Konsument())</span><span class="s0">;</span>
+                <span class="s1">Thread konsument3 = </span><span class="s0">new </span><span class="s1">Thread(</span><span class="s0">new </span><span class="s1">Konsument())</span><span class="s0">;</span>
+                <span class="s1">Thread konsument4 = </span><span class="s0">new </span><span class="s1">Thread(</span><span class="s0">new </span><span class="s1">Konsument())</span><span class="s0">;</span>
+                <span class="s1">Thread konsument5 = </span><span class="s0">new </span><span class="s1">Thread(</span><span class="s0">new </span><span class="s1">Konsument())</span><span class="s0">;</span>
+
+                <span class="s1">Thread marktplatzT = </span><span class="s0">new </span><span class="s1">Thread(marktplatz)</span><span class="s0">;</span>
+
+                <span class="s1">rohstoffLieferant1.start()</span><span class="s0">;</span>
+                <span class="s1">rohstoffLieferant2.start()</span><span class="s0">;</span>
+                <span class="s1">rohstoffLieferant3.start()</span><span class="s0">;</span>
+                <span class="s1">rohstoffLieferant1.join()</span><span class="s0">;</span>
+                <span class="s1">rohstoffLieferant2.join()</span><span class="s0">;</span>
+                <span class="s1">rohstoffLieferant3.join()</span><span class="s0">;</span>
+
+                <span class="s1">produzent1.start()</span><span class="s0">;</span>
+                <span class="s1">produzent1.join()</span><span class="s0">;</span>
+                <span class="s1">produzent2.start()</span><span class="s0">;</span>
+                <span class="s1">produzent2.join()</span><span class="s0">;</span>
+                <span class="s1">produzent3.start()</span><span class="s0">;</span>
+                <span class="s1">produzent3.join()</span><span class="s0">;</span>
+
+                <span class="s1">konsument1.start()</span><span class="s0">;</span>
+                <span class="s1">konsument2.start()</span><span class="s0">;</span>
+                <span class="s1">konsument3.start()</span><span class="s0">;</span>
+                <span class="s1">konsument4.start()</span><span class="s0">;</span>
+                <span class="s1">konsument5.start()</span><span class="s0">;</span>
+                <span class="s1">konsument1.join()</span><span class="s0">;</span>
+                <span class="s1">konsument2.join()</span><span class="s0">;</span>
+                <span class="s1">konsument3.join()</span><span class="s0">;</span>
+                <span class="s1">konsument4.join()</span><span class="s0">;</span>
+                <span class="s1">konsument5.join()</span><span class="s0">;</span>
+
+                <span class="s1">System.out.println()</span><span class="s0">;</span>
+                <span class="s1">System.out.println(</span><span class="s5">&quot;-----------------------------------------------------------------&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">System.out.println()</span><span class="s0">;</span>
+                <span class="s1">System.out.println(i + </span><span class="s5">&quot;. Durchlauf:&quot;</span><span class="s1">)</span><span class="s0">;</span>
+
+                <span class="s1">marktplatzT.start()</span><span class="s0">;</span>
+                <span class="s1">marktplatzT.join()</span><span class="s0">;</span>
+
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span></pre>
+</body>
+</html>
